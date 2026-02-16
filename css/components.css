@@ -1,0 +1,135 @@
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2) var(--space-3);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: var(--transition);
+    border: 1px solid transparent;
+    outline: none;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background-color: var(--color-accent);
+    color: var(--color-white);
+}
+
+.btn-primary:hover {
+    background-color: #6D0000;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border-color: var(--color-text);
+    color: var(--color-text);
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-text);
+    color: var(--color-white);
+}
+
+/* Inputs */
+.input-group {
+    margin-bottom: var(--space-3);
+}
+
+.label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-1);
+    color: rgba(17, 17, 17, 0.6);
+}
+
+.input {
+    width: 100%;
+    padding: var(--space-2);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 16px;
+    transition: var(--transition);
+    color: var(--color-text);
+}
+
+.input:focus {
+    border-color: var(--color-text);
+    outline: none;
+    background: var(--color-white);
+}
+
+/* Cards */
+.card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.card h3 {
+    margin-bottom: var(--space-1);
+}
+
+.card p {
+    font-size: 15px;
+    color: rgba(17, 17, 17, 0.7);
+    margin-bottom: var(--space-3);
+}
+
+/* Badges & Indicators */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-2);
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 1px;
+    background: #E5E5E5;
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-in-progress {
+    background: #111;
+    color: #fff;
+}
+
+.badge-shipped {
+    background: var(--color-success);
+    color: var(--color-white);
+}
+
+.progress-container {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(17, 17, 17, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Form Helper */
+.prompt-box {
+    background: #fff;
+    border: 1px solid var(--color-border);
+    padding: var(--space-2);
+    border-radius: var(--radius);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
+    overflow-x: auto;
+}

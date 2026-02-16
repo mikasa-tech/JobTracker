@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KodNest Premium Build System</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/layout.css">
+</head>
+
+<body>
+
+  <!-- TOP BAR -->
+  <header class="top-bar">
+    <div class="brand">KODNEST PREMIUM</div>
+    <div class="progress-container">
+      STEP 01 / 04
+    </div>
+    <div class="status-badge">
+      <span class="badge badge-in-progress">In Progress</span>
+    </div>
+  </header>
+
+  <!-- CONTEXT HEADER -->
+  <section class="context-header">
+    <div class="container" style="padding: 0;">
+      <h1>Intelligence Layer</h1>
+      <p>Configure the foundational parameters of your build ecosystem. Calm, intentional, and performant.</p>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- PRIMARY WORKSPACE -->
+    <section class="primary-workspace">
+      <div class="card">
+        <h3>Core Engine Configuration</h3>
+        <p>Define the baseline constraints for the build system. These settings are immutable once the build initiates.
+        </p>
+
+        <div class="input-group">
+          <label class="label">Project Name</label>
+          <input type="text" class="input" placeholder="e.g. Apollo Engine">
+        </div>
+
+        <div class="input-group">
+          <label class="label">Deployment Cluster</label>
+          <input type="text" class="input" placeholder="e.g. ap-southeast-1">
+        </div>
+
+        <div class="flex gap-2" style="margin-top: var(--space-3);">
+          <button class="btn btn-primary">Save Configuration</button>
+          <button class="btn btn-secondary">Discard</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>System Integrity</h3>
+        <p>Monitor the health and stability of the current environment.</p>
+        <div class="badge badge-shipped">System Stable</div>
+      </div>
+    </section>
+
+    <!-- SECONDARY PANEL -->
+    <aside class="secondary-panel">
+      <h3>Implementation Guide</h3>
+      <p>Follow these steps to activate the premium build environment.</p>
+
+      <div class="prompt-box">
+        kodnest init --premium --tier=b2c
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <button class="btn btn-secondary">Copy Command</button>
+        <button class="btn btn-secondary">Build in Lovable</button>
+        <button class="btn btn-primary">It Worked</button>
+        <button class="btn btn-secondary" style="border-color: var(--color-accent); color: var(--color-accent);">Handle
+          Error</button>
+        <button class="btn btn-secondary">Add Screenshot</button>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- PROOF FOOTER -->
+  <footer class="proof-footer">
+    <div class="proof-item">
+      <input type="checkbox" id="ui-built">
+      <label for="ui-built">UI Built</label>
+    </div>
+    <div class="proof-item">
+      <input type="checkbox" id="logic-working">
+      <label for="logic-working">Logic Working</label>
+    </div>
+    <div class="proof-item">
+      <input type="checkbox" id="test-passed">
+      <label for="test-passed">Test Passed</label>
+    </div>
+    <div class="proof-item">
+      <input type="checkbox" id="deployed">
+      <label for="deployed">Deployed</label>
+    </div>
+  </footer>
+
+</body>
+
+</html>

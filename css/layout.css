@@ -1,0 +1,86 @@
+/* Layout Structure */
+.top-bar {
+    height: var(--space-5);
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-4);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.top-bar .brand {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.context-header {
+    padding: var(--space-5) var(--space-4);
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.context-header h1 {
+    margin-bottom: var(--space-1);
+}
+
+.context-header p {
+    color: rgba(17, 17, 17, 0.6);
+    font-size: 18px;
+}
+
+.main-content {
+    display: flex;
+    min-height: calc(100vh - 400px);
+}
+
+.primary-workspace {
+    flex: 0 0 70%;
+    padding: var(--space-5) var(--space-4);
+    border-right: 1px solid var(--color-border);
+}
+
+.secondary-panel {
+    flex: 0 0 30%;
+    padding: var(--space-5) var(--space-3);
+    background: rgba(17, 17, 17, 0.015);
+}
+
+.proof-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-white);
+    border-top: 1px solid var(--color-text);
+    padding: var(--space-2) var(--space-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    z-index: 1010;
+}
+
+.proof-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.proof-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-accent);
+}
+
+/* Ensure main content doesn't get hidden by footer */
+body {
+    padding-bottom: 80px;
+}
