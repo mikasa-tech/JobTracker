@@ -9,16 +9,6 @@
       "source": "/dashboard",
       "destination": "/",
       "permanent": true
-    },
-    {
-      "source": "/jt/07-test.html",
-      "destination": "/test.html",
-      "permanent": true
-    },
-    {
-      "source": "/jt/08-ship.html",
-      "destination": "/ship.html",
-      "permanent": true
     }
   ],
   "cleanUrls": true
