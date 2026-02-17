@@ -1,9 +1,6 @@
-/**
- * Core Logic for Job Notification Tracker
- */
-
 const STORAGE_KEY = 'jobTrackerStatus';
 const UPDATES_KEY = 'jobStatusUpdates';
+const TEST_KEY = 'jobTrackerTests';
 
 // Mock Data for Jobs
 const INITIAL_JOBS = [
@@ -13,6 +10,104 @@ const INITIAL_JOBS = [
     { id: '4', title: 'Frontend Architect', company: 'Vercel', matchScore: 91, location: 'Remote', remote: true },
     { id: '5', title: 'Cloud Infrastructure Lead', company: 'Tailscale', matchScore: 75, location: 'Toronto, CA', remote: true }
 ];
+
+const TEST_ITEMS = [
+    { id: 't1', label: 'Preferences persist after refresh', hint: 'Change a filter, refresh, and confirm it stays.' },
+    { id: 't2', label: 'Match score calculates correctly', hint: 'Verify score slider correctly filters jobs.' },
+    { id: 't3', label: '"Show only matches" toggle works', hint: 'Check Remote checkbox logic.' },
+    { id: 't4', label: 'Save job persists after refresh', hint: 'Save a job and ensure it stays in Saved view.' },
+    { id: 't5', label: 'Apply opens in new tab', hint: 'Click Apply and confirm a new tab opens.' },
+    { id: 't6', label: 'Status update persists after refresh', hint: 'Change status, refresh, confirm color badge.' },
+    { id: 't7', label: 'Status filter works correctly', hint: 'Filter by Applied and confirm list updates.' },
+    { id: 't8', label: 'Digest generates top 10 by score', hint: 'Check the Audit Trail for recent entries.' },
+    { id: 't9', label: 'Digest persists for the day', hint: 'Ensure audit logs stay after navigation.' },
+    { id: 't10', label: 'No console errors on main pages', hint: 'Open DevTools and check Console tab.' }
+];
+
+class TestSystem {
+    constructor() {
+        this.testState = JSON.parse(localStorage.getItem(TEST_KEY)) || {};
+        this.init();
+    }
+
+    init() {
+        this.checkLock();
+        if (window.location.pathname.includes('07-test.html')) {
+            this.renderChecklist();
+        }
+    }
+
+    toggleTest(id) {
+        this.testState[id] = !this.testState[id];
+        localStorage.setItem(TEST_KEY, JSON.stringify(this.testState));
+        this.renderChecklist();
+        this.checkLock();
+    }
+
+    resetTests() {
+        this.testState = {};
+        localStorage.setItem(TEST_KEY, JSON.stringify(this.testState));
+        this.renderChecklist();
+        this.checkLock();
+    }
+
+    getPassCount() {
+        return Object.values(this.testState).filter(val => val === true).length;
+    }
+
+    checkLock() {
+        const passCount = this.getPassCount();
+        const isShipPage = window.location.pathname.includes('08-ship.html');
+        const shipLink = document.getElementById('ship-link');
+
+        // Update Ship link in nav if it exists
+        if (shipLink) {
+            if (passCount === 10) {
+                shipLink.style.color = 'var(--color-white)';
+                shipLink.style.cursor = 'pointer';
+                shipLink.style.opacity = '1';
+                shipLink.style.pointerEvents = 'auto';
+            } else {
+                shipLink.style.color = 'rgba(255,255,255,0.3)';
+                shipLink.style.cursor = 'not-allowed';
+                shipLink.style.opacity = '0.5';
+                shipLink.style.pointerEvents = 'none';
+            }
+        }
+
+        // Blocking Logic for Ship Page
+        if (isShipPage && passCount < 10) {
+            window.location.href = '07-test.html';
+        }
+    }
+
+    renderChecklist() {
+        const container = document.getElementById('checklist-container');
+        if (!container) return;
+
+        const passCount = this.getPassCount();
+        document.getElementById('pass-count').textContent = passCount;
+
+        const warning = document.getElementById('ship-warning');
+        if (warning) {
+            warning.classList.toggle('visible', passCount < 10);
+        }
+
+        container.innerHTML = TEST_ITEMS.map(item => `
+            <div class="checklist-item">
+                <input type="checkbox" class="checklist-checkbox" id="${item.id}" 
+                    ${this.testState[item.id] ? 'checked' : ''} 
+                    onchange="testSystem.toggleTest('${item.id}')">
+                <div class="checklist-label">
+                    ${item.label}
+                    <span class="tooltip-trigger">?
+                        <span class="tooltip-text">${item.hint}</span>
+                    </span>
+                </div>
+            </div>
+        `).join('');
+    }
+}
 
 class JobTracker {
     constructor() {
@@ -51,7 +146,6 @@ class JobTracker {
     }
 
     getStatus(jobId) {
-        // Edge Case: If no status exists, assume "Not Applied". Robust vs empty localStorage.
         return this.statusMap[jobId] || 'Not Applied';
     }
 
@@ -62,7 +156,6 @@ class JobTracker {
         this.statusMap[jobId] = status;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.statusMap));
 
-        // Add to audit trail for /digest
         const job = this.jobs.find(j => j.id === jobId);
         this.statusUpdates.unshift({
             jobTitle: job.title,
@@ -77,7 +170,8 @@ class JobTracker {
     }
 
     clearFilters() {
-        document.getElementById('status-filter').value = 'All';
+        const sf = document.getElementById('status-filter');
+        if (sf) sf.value = 'All';
         const loc = document.getElementById('location-filter');
         if (loc) loc.value = '';
         const rem = document.getElementById('remote-filter');
@@ -119,7 +213,6 @@ class JobTracker {
             score: parseInt(document.getElementById('score-filter')?.value || '0', 10)
         };
 
-        // Multi-criteria AND logic
         const filteredJobs = this.jobs.filter(job => {
             const status = this.getStatus(job.id);
             const matchesStatus = filters.status === 'All' || status === filters.status;
@@ -180,4 +273,5 @@ class JobTracker {
 // Initialize on load
 window.addEventListener('DOMContentLoaded', () => {
     window.tracker = new JobTracker();
+    window.testSystem = new TestSystem();
 });
