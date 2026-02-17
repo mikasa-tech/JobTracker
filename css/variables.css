@@ -13,6 +13,12 @@
   --color-border: rgba(17, 17, 17, 0.1);
   --color-white: #FFFFFF;
 
+  /* Status Colors */
+  --status-neutral: #E5E5E5;
+  --status-applied: #3182CE;
+  --status-rejected: #E53E3E;
+  --status-selected: #38A169;
+
   /* Spacing System (consistent scale) */
   --space-1: 8px;
   --space-2: 16px;

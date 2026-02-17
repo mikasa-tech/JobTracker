@@ -113,6 +113,106 @@
     color: var(--color-white);
 }
 
+/* Status Badges */
+.badge-status-neutral {
+    background: var(--status-neutral);
+    color: var(--color-text);
+}
+
+.badge-status-applied {
+    background: var(--status-applied);
+    color: var(--color-white);
+}
+
+.badge-status-rejected {
+    background: var(--status-rejected);
+    color: var(--color-white);
+}
+
+.badge-status-selected {
+    background: var(--status-selected);
+    color: var(--color-white);
+}
+
+/* Job Cards specific extensions */
+.job-card {
+    transition: transform var(--transition);
+}
+
+.job-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(17, 17, 17, 0.2);
+}
+
+.job-meta {
+    font-size: 13px;
+    color: rgba(17, 17, 17, 0.5);
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+}
+
+.status-group {
+    display: flex;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: var(--space-2);
+}
+
+.status-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: var(--space-1) var(--space-2);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition);
+    border-right: 1px solid var(--color-border);
+}
+
+.status-btn:last-child {
+    border-right: none;
+}
+
+.status-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.status-btn.active {
+    background: var(--color-text);
+    color: var(--color-white);
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    bottom: var(--space-4);
+    right: var(--space-4);
+    background: var(--color-text);
+    color: var(--color-white);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius);
+    font-size: 13px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    animation: slideUp var(--transition) ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 .progress-container {
     font-size: 13px;
     font-weight: 600;
