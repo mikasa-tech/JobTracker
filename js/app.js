@@ -122,7 +122,8 @@ class ProofSystem {
     }
 
     init() {
-        if (window.location.pathname.includes('proof.html')) {
+        const path = window.location.pathname;
+        if (path.includes('proof.html') || path.endsWith('/proof')) {
             this.renderProofPage();
         }
         this.updateShipStatus();
