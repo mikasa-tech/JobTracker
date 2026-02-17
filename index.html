@@ -19,7 +19,6 @@
                 style="color: var(--color-white); text-decoration: none; font-weight: 600;">Dashboard</a>
             <a href="saved.html" style="color: rgba(255,255,255,0.6); text-decoration: none;">Saved</a>
             <a href="digest.html" style="color: rgba(255,255,255,0.6); text-decoration: none;">Digest</a>
-        </nav>
     </header>
 
     <section class="context-header">
@@ -29,19 +28,42 @@
                     <h1>Dashboard</h1>
                     <p>Monitor and manage your active job applications.</p>
                 </div>
-                <div class="input-group" style="margin-bottom: 0;">
-                    <label class="label">Filter by Status</label>
-                    <select id="status-filter" class="input" style="padding: 8px var(--space-2); min-width: 160px;">
-                        <option value="All">All Jobs</option>
-                        <option value="Not Applied">Not Applied</option>
-                        <option value="Applied">Applied</option>
-                        <option value="Rejected">Rejected</option>
-                        <option value="Selected">Selected</option>
-                    </select>
-                </div>
             </div>
         </div>
     </section>
+
+    <div class="filters-container card"
+        style="padding: var(--space-2); margin-top: var(--space-2); display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-2); align-items: end; width: 100%;">
+        <div class="input-group" style="margin-bottom: 0;">
+            <label class="label">Status</label>
+            <select id="status-filter" class="input">
+                <option value="All">All Jobs</option>
+                <option value="Not Applied">Not Applied</option>
+                <option value="Applied">Applied</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Selected">Selected</option>
+            </select>
+        </div>
+        <div class="input-group" style="margin-bottom: 0;">
+            <label class="label">Location</label>
+            <input type="text" id="location-filter" class="input" placeholder="e.g. Remote, SF...">
+        </div>
+        <div class="input-group" style="margin-bottom: 0;">
+            <label class="label">Min Match: <span id="score-value">0%+</span></label>
+            <input type="range" id="score-filter" min="0" max="100" value="0" style="width: 100%;">
+        </div>
+        <div class="flex items-center gap-2">
+            <div style="flex-grow: 1;">
+                <label class="flex items-center gap-1"
+                    style="cursor: pointer; font-size: 11px; font-weight: 600; text-transform: uppercase;">
+                    <input type="checkbox" id="remote-filter">
+                    Remote Only
+                </label>
+            </div>
+            <button id="clear-filters" class="btn btn-secondary"
+                style="padding: var(--space-1) var(--space-2); font-size: 11px;">Clear All</button>
+        </div>
+    </div>
 
     <main class="main-content container">
         <div id="job-list" class="primary-workspace" style="width: 100%; grid-column: span 12;">
