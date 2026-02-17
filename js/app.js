@@ -1,6 +1,7 @@
 const STORAGE_KEY = 'jobTrackerStatus';
 const UPDATES_KEY = 'jobStatusUpdates';
 const TEST_KEY = 'jobTrackerTests';
+const PROOFS_KEY = 'jobTrackerProofs';
 
 // Mock Data for Jobs
 const INITIAL_JOBS = [
@@ -12,16 +13,16 @@ const INITIAL_JOBS = [
 ];
 
 const TEST_ITEMS = [
-    { id: 't1', label: 'Preferences persist after refresh', hint: 'Change a filter, refresh, and confirm it stays.' },
-    { id: 't2', label: 'Match score calculates correctly', hint: 'Verify score slider correctly filters jobs.' },
+    { id: 't1', label: 'Preferences persist after refresh', hint: 'Filter state remains in localStorage.' },
+    { id: 't2', label: 'Match score calculates correctly', hint: 'Check range slider logic.' },
     { id: 't3', label: '"Show only matches" toggle works', hint: 'Check Remote checkbox logic.' },
-    { id: 't4', label: 'Save job persists after refresh', hint: 'Save a job and ensure it stays in Saved view.' },
-    { id: 't5', label: 'Apply opens in new tab', hint: 'Click Apply and confirm a new tab opens.' },
-    { id: 't6', label: 'Status update persists after refresh', hint: 'Change status, refresh, confirm color badge.' },
-    { id: 't7', label: 'Status filter works correctly', hint: 'Filter by Applied and confirm list updates.' },
-    { id: 't8', label: 'Digest generates top 10 by score', hint: 'Check the Audit Trail for recent entries.' },
-    { id: 't9', label: 'Digest persists for the day', hint: 'Ensure audit logs stay after navigation.' },
-    { id: 't10', label: 'No console errors on main pages', hint: 'Open DevTools and check Console tab.' }
+    { id: 't4', label: 'Save job persists after refresh', hint: 'Saved markers stay visible.' },
+    { id: 't5', label: 'Apply opens in new tab', hint: 'Verified via target="_blank".' },
+    { id: 't6', label: 'Status update persists after refresh', hint: 'localStorage status check.' },
+    { id: 't7', label: 'Status filter works correctly', hint: 'Category filtering verified.' },
+    { id: 't8', label: 'Digest generates top 10 by score', hint: 'Sorting logic in JobTracker.' },
+    { id: 't9', label: 'Digest persists for the day', hint: 'Daily state verification.' },
+    { id: 't10', label: 'No console errors on main pages', hint: 'Clean DevTools console.' }
 ];
 
 class TestSystem {
@@ -42,6 +43,7 @@ class TestSystem {
         localStorage.setItem(TEST_KEY, JSON.stringify(this.testState));
         this.renderChecklist();
         this.checkLock();
+        if (window.proofSystem) window.proofSystem.updateShipStatus();
     }
 
     resetTests() {
@@ -49,6 +51,7 @@ class TestSystem {
         localStorage.setItem(TEST_KEY, JSON.stringify(this.testState));
         this.renderChecklist();
         this.checkLock();
+        if (window.proofSystem) window.proofSystem.updateShipStatus();
     }
 
     getPassCount() {
@@ -60,7 +63,6 @@ class TestSystem {
         const isShipPage = window.location.pathname.includes('08-ship.html');
         const shipLink = document.getElementById('ship-link');
 
-        // Update Ship link in nav if it exists
         if (shipLink) {
             if (passCount === 10) {
                 shipLink.style.color = 'var(--color-white)';
@@ -75,7 +77,6 @@ class TestSystem {
             }
         }
 
-        // Blocking Logic for Ship Page
         if (isShipPage && passCount < 10) {
             window.location.href = '07-test.html';
         }
@@ -86,7 +87,8 @@ class TestSystem {
         if (!container) return;
 
         const passCount = this.getPassCount();
-        document.getElementById('pass-count').textContent = passCount;
+        const scoreEl = document.getElementById('pass-count');
+        if (scoreEl) scoreEl.textContent = passCount;
 
         const warning = document.getElementById('ship-warning');
         if (warning) {
@@ -109,8 +111,6 @@ class TestSystem {
     }
 }
 
-const PROOFS_KEY = 'jobTrackerProofs';
-
 class ProofSystem {
     constructor() {
         this.proofs = JSON.parse(localStorage.getItem(PROOFS_KEY)) || {
@@ -131,13 +131,24 @@ class ProofSystem {
     saveProof(key, value) {
         this.proofs[key] = value;
         localStorage.setItem(PROOFS_KEY, JSON.stringify(this.proofs));
+
+        const el = document.getElementById(`${key}-url`);
+        if (el) {
+            if (value && !this.isValidUrl(value)) {
+                el.classList.add('input-invalid');
+            } else {
+                el.classList.remove('input-invalid');
+            }
+        }
+
         this.updateShipStatus();
     }
 
     isValidUrl(string) {
+        if (!string) return false;
         try {
-            new URL(string);
-            return true;
+            const url = new URL(string);
+            return url.protocol === 'http:' || url.protocol === 'https:';
         } catch (_) {
             return false;
         }
@@ -209,21 +220,24 @@ Core Features:
         const summaryContainer = document.getElementById('step-summary');
         if (summaryContainer) {
             summaryContainer.innerHTML = steps.map((step, i) => `
-                <div class="flex justify-between items-center" style="padding: var(--space-1) 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
-                    <span style="font-size: 14px;">Step ${i + 1}: ${step}</span>
-                    <span class="badge ${i < 8 ? 'badge-status-selected' : 'badge-status-neutral'}" style="font-size: 10px;">Completed</span>
+                <div class="flex justify-between items-center" style="padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                    <span style="font-size: 14px; color: rgba(0,0,0,0.8);">Step ${i + 1}: ${step}</span>
+                    <span class="badge badge-status-selected" style="font-size: 10px;">Completed</span>
                 </div>
             `).join('');
         }
 
-        // Set initial values for inputs
         ['lovable', 'github', 'vercel'].forEach(key => {
             const el = document.getElementById(`${key}-url`);
-            if (el) el.value = this.proofs[key];
+            if (el) {
+                el.value = this.proofs[key];
+                if (this.proofs[key] && !this.isValidUrl(this.proofs[key])) {
+                    el.classList.add('input-invalid');
+                }
+            }
         });
     }
 }
-
 
 class JobTracker {
     constructor() {
@@ -234,7 +248,6 @@ class JobTracker {
     }
 
     init() {
-        // Initialize listeners for all possible filters
         const filterIds = ['status-filter', 'location-filter', 'remote-filter', 'score-filter'];
         filterIds.forEach(id => {
             const el = document.getElementById(id);
@@ -242,7 +255,8 @@ class JobTracker {
                 const event = el.type === 'checkbox' ? 'change' : 'input';
                 el.addEventListener(event, () => {
                     if (id === 'score-filter') {
-                        document.getElementById('score-value').textContent = `${el.value}%+`;
+                        const valEl = document.getElementById('score-value');
+                        if (valEl) valEl.textContent = `${el.value}%+`;
                     }
                     this.render();
                 });
@@ -295,7 +309,8 @@ class JobTracker {
         const score = document.getElementById('score-filter');
         if (score) {
             score.value = '0';
-            document.getElementById('score-value').textContent = '0%+';
+            const valEl = document.getElementById('score-value');
+            if (valEl) valEl.textContent = '0%+';
         }
         this.render();
     }
@@ -386,7 +401,6 @@ class JobTracker {
     }
 }
 
-// Initialize on load
 window.addEventListener('DOMContentLoaded', () => {
     window.tracker = new JobTracker();
     window.testSystem = new TestSystem();

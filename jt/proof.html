@@ -5,24 +5,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proof & Submission | Job Tracker</title>
-    <link rel="stylesheet" href="../css/global.css?v=1100">
-    <link rel="stylesheet" href="../css/components.css?v=1100">
-    <link rel="stylesheet" href="../css/layout.css?v=1100">
+    <link rel="stylesheet" href="../css/global.css?v=1205">
+    <link rel="stylesheet" href="../css/components.css?v=1205">
+    <link rel="stylesheet" href="../css/layout.css?v=1205">
+    <style>
+        .input-invalid {
+            border-color: #e74c3c !important;
+            background-color: rgba(231, 76, 60, 0.05) !important;
+        }
+
+        .input-invalid:focus {
+            box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2) !important;
+        }
+
+        @media (max-width: 992px) {
+            .proof-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .proof-col-summary {
+                grid-column: span 12 !important;
+            }
+
+            .proof-col-artifacts {
+                grid-column: span 12 !important;
+            }
+        }
+
+        #step-summary {
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: var(--radius-lg);
+            padding: var(--space-2);
+        }
+    </style>
 </head>
 
 <body>
     <div
         style="background: var(--color-success); color: white; text-align: center; padding: 10px; font-weight: bold; position: sticky; top: 0; z-index: 9999;">
-        ✅ PROOF SYSTEM SYNCED: 2026-02-17 11:05
+        ✅ SYSTEM SYNCED: 2026-02-17 12:05 (FINAL MASTER)
     </div>
 
     <header class="top-bar">
         <div class="brand">JOB TRACKER</div>
-        <div class="progress-container">FINAL SUBMISSION</div>
+        <div class="progress-container">PROJECT FINALIZATION</div>
         <nav class="flex gap-3">
             <a href="../index.html" style="color: rgba(255,255,255,0.6); text-decoration: none;">Dashboard</a>
             <a href="07-test.html" style="color: rgba(255,255,255,0.6); text-decoration: none;">Test</a>
-            <a href="08-ship.html" style="color: rgba(255,255,255,0.6); text-decoration: none;">Ship</a>
+            <a href="08-ship.html" id="ship-link" style="color: rgba(255,255,255,0.3); text-decoration: none;">Ship</a>
             <a href="proof.html" style="color: var(--color-white); text-decoration: none; font-weight: 600;">Proof</a>
         </nav>
     </header>
@@ -34,56 +64,67 @@
                     <h1>Final Proof</h1>
                     <p>Collect artifacts and finalize your project submission.</p>
                 </div>
-                <span id="ship-status-badge" class="badge badge-status-neutral">Not Started</span>
+                <div class="flex items-center gap-2">
+                    <span style="font-size: 12px; font-weight: 600; color: rgba(0,0,0,0.5);">STATUS:</span>
+                    <span id="ship-status-badge" class="badge">Checking...</span>
+                </div>
             </div>
         </div>
     </section>
 
-    <main class="main-content container"
-        style="display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--space-3);">
-        <!-- Column 1: Step Summary -->
-        <div class="card" style="grid-column: span 5; padding: var(--space-3);">
-            <h3 style="margin-bottom: var(--space-2);">A) Step Completion Summary</h3>
-            <div id="step-summary">
-                <!-- Injected via JavaScript -->
-            </div>
-        </div>
+    <main class="main-content container" style="padding-top: var(--space-3); padding-bottom: var(--space-4);">
+        <div class="proof-grid" style="display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--space-3);">
 
-        <!-- Column 2: Artifact Collection -->
-        <div class="card" style="grid-column: span 7; padding: var(--space-3);">
-            <h3 style="margin-bottom: var(--space-2);">B) Artifact Collection</h3>
-
-            <div class="input-group">
-                <label class="label">Lovable Project Link</label>
-                <input type="url" id="lovable-url" class="input" placeholder="https://lovable.dev/projects/..."
-                    oninput="proofSystem.saveProof('lovable', this.value)">
+            <!-- Column 1: Step Summary -->
+            <div class="card proof-col-summary"
+                style="grid-column: span 5; padding: var(--space-3); height: fit-content;">
+                <h3 style="margin-bottom: var(--space-2);">A) Step Completion Summary</h3>
+                <div id="step-summary">
+                    <!-- Injected via app.js -->
+                </div>
             </div>
 
-            <div class="input-group">
-                <label class="label">GitHub Repository Link</label>
-                <input type="url" id="github-url" class="input" placeholder="https://github.com/..."
-                    oninput="proofSystem.saveProof('github', this.value)">
-            </div>
+            <!-- Column 2: Artifact Collection -->
+            <div class="card proof-col-artifacts" style="grid-column: span 7; padding: var(--space-3);">
+                <h3 style="margin-bottom: var(--space-2);">B) Artifact Collection</h3>
 
-            <div class="input-group">
-                <label class="label">Deployed URL (Vercel)</label>
-                <input type="url" id="vercel-url" class="input" placeholder="https://...vercel.app"
-                    oninput="proofSystem.saveProof('vercel', this.value)">
-            </div>
+                <p style="font-size: 13px; color: rgba(0,0,0,0.6); margin-bottom: var(--space-2);">
+                    Provide valid URLs for all required artifacts to enable the final shipment.
+                </p>
 
-            <hr style="margin: var(--space-3) 0; opacity: 0.1;">
+                <div class="input-group">
+                    <label class="label">Lovable Project Link</label>
+                    <input type="url" id="lovable-url" class="input" placeholder="https://lovable.dev/projects/..."
+                        oninput="proofSystem.saveProof('lovable', this.value)">
+                </div>
 
-            <div class="flex justify-between items-center">
-                <button class="btn btn-secondary" onclick="proofSystem.copySubmission()">Copy Final Submission</button>
-                <div id="ship-final-message"
-                    style="display: none; color: var(--color-success); font-weight: 600; font-size: 14px;">
-                    Project 1 Shipped Successfully.
+                <div class="input-group">
+                    <label class="label">GitHub Repository Link</label>
+                    <input type="url" id="github-url" class="input" placeholder="https://github.com/..."
+                        oninput="proofSystem.saveProof('github', this.value)">
+                </div>
+
+                <div class="input-group">
+                    <label class="label">Deployed URL (Vercel)</label>
+                    <input type="url" id="vercel-url" class="input" placeholder="https://...vercel.app"
+                        oninput="proofSystem.saveProof('vercel', this.value)">
+                </div>
+
+                <hr style="margin: var(--space-3) 0; border: none; border-top: 1px solid rgba(0,0,0,0.05);">
+
+                <div class="flex justify-between items-center">
+                    <button class="btn btn-secondary" onclick="proofSystem.copySubmission()">Copy Final
+                        Submission</button>
+                    <div id="ship-final-message"
+                        style="display: none; color: var(--color-success); font-weight: 700; font-size: 15px; border-left: 3px solid var(--color-success); padding-left: 12px;">
+                        Project 1 Shipped Successfully.
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <script src="../js/app.js?v=1100"></script>
+    <script src="../js/app.js?v=1205"></script>
 </body>
 
 </html>
