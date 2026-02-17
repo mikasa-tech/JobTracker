@@ -109,6 +109,122 @@ class TestSystem {
     }
 }
 
+const PROOFS_KEY = 'jobTrackerProofs';
+
+class ProofSystem {
+    constructor() {
+        this.proofs = JSON.parse(localStorage.getItem(PROOFS_KEY)) || {
+            lovable: '',
+            github: '',
+            vercel: ''
+        };
+        this.init();
+    }
+
+    init() {
+        if (window.location.pathname.includes('proof.html')) {
+            this.renderProofPage();
+        }
+        this.updateShipStatus();
+    }
+
+    saveProof(key, value) {
+        this.proofs[key] = value;
+        localStorage.setItem(PROOFS_KEY, JSON.stringify(this.proofs));
+        this.updateShipStatus();
+    }
+
+    isValidUrl(string) {
+        try {
+            new URL(string);
+            return true;
+        } catch (_) {
+            return false;
+        }
+    }
+
+    isFullyQualified() {
+        const testsPassed = window.testSystem ? window.testSystem.getPassCount() === 10 : false;
+        const linksValid = this.isValidUrl(this.proofs.lovable) &&
+            this.isValidUrl(this.proofs.github) &&
+            this.isValidUrl(this.proofs.vercel);
+        return testsPassed && linksValid;
+    }
+
+    updateShipStatus() {
+        const badge = document.getElementById('ship-status-badge');
+        const message = document.getElementById('ship-final-message');
+        if (!badge) return;
+
+        const isShipped = this.isFullyQualified();
+        const hasStarted = this.proofs.lovable || this.proofs.github || this.proofs.vercel;
+
+        if (isShipped) {
+            badge.textContent = 'Shipped';
+            badge.className = 'badge badge-status-selected';
+            if (message) message.style.display = 'block';
+        } else if (hasStarted) {
+            badge.textContent = 'In Progress';
+            badge.className = 'badge badge-status-applied';
+            if (message) message.style.display = 'none';
+        } else {
+            badge.textContent = 'Not Started';
+            badge.className = 'badge badge-status-neutral';
+            if (message) message.style.display = 'none';
+        }
+    }
+
+    copySubmission() {
+        const text = `------------------------------------------
+Job Notification Tracker — Final Submission
+
+Lovable Project:
+${this.proofs.lovable || 'Pending'}
+
+GitHub Repository:
+${this.proofs.github || 'Pending'}
+
+Live Deployment:
+${this.proofs.vercel || 'Pending'}
+
+Core Features:
+- Intelligent match scoring
+- Daily digest simulation
+- Status tracking
+- Test checklist enforced
+------------------------------------------`;
+
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Submission copied to clipboard.');
+        });
+    }
+
+    renderProofPage() {
+        const steps = [
+            'Project Setup', 'Navigation Links', 'Job Data Layer',
+            'Match Score Logic', 'Daily Digest System', 'Custom Layout',
+            'Test Checklist Enforcement', 'Final Submission System'
+        ];
+
+        const summaryContainer = document.getElementById('step-summary');
+        if (summaryContainer) {
+            summaryContainer.innerHTML = steps.map((step, i) => `
+                <div class="flex justify-between items-center" style="padding: var(--space-1) 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                    <span style="font-size: 14px;">Step ${i + 1}: ${step}</span>
+                    <span class="badge ${i < 8 ? 'badge-status-selected' : 'badge-status-neutral'}" style="font-size: 10px;">Completed</span>
+                </div>
+            `).join('');
+        }
+
+        // Set initial values for inputs
+        ['lovable', 'github', 'vercel'].forEach(key => {
+            const el = document.getElementById(`${key}-url`);
+            if (el) el.value = this.proofs[key];
+        });
+    }
+}
+
+
 class JobTracker {
     constructor() {
         this.jobs = INITIAL_JOBS;
@@ -274,4 +390,5 @@ class JobTracker {
 window.addEventListener('DOMContentLoaded', () => {
     window.tracker = new JobTracker();
     window.testSystem = new TestSystem();
+    window.proofSystem = new ProofSystem();
 });
